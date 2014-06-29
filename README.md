@@ -7,6 +7,17 @@ Uses the same data feed that TripView uses for live bus data. Ideally, TfNSW wou
 
 **Please** don't cause more data load than the TripView client might otherwise invoke (ie don't poll any faster than 30 seconds. You won't get newer data by doing that anyway). That's just politeness. Otherwise, you might end up breaking it for you and everybody else.
 
+Using
+=====
+
+Add the routes you're interested in to `routes.txt`, and run `server.py`.
+
+Then you can access the interactive map at http://localhost:8080/. By default the server binds to all addresses though, so you may wish to change that, depending on what you're using the server code for.
+
+Alternatively, you can access the JSON endpoint at `/vehicles`. Rate limiting is done on client-side, not server-side, so please follow the guideline below and either:
+* don't hit the endpoint more than once every 30 seconds, or
+* integrate rate limiting on the server instead.
+
 Route identifiers
 -----------------
 
