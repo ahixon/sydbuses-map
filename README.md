@@ -22,5 +22,9 @@ License
 
 Code is licensed under MIT.
 
-The data feed is **not**, however. If you are concerned about your usage of this data and any implications that may invole, you should contact a lawyer first, and not use the data feed.
+However, the data feed is **not**.
+
+If you are concerned about your usage of this data and any implications that may involve, you should contact a lawyer first, and not use the data feed.
 If you're using it for any heavy duty or commercial uses, I would suggest contacting Transport for NSW, who can provide you with access to the raw live data. 
+
+See LICENSE for more information, actual license text and disclaimers.
