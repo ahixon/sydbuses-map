@@ -1,0 +1,92 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <meta name="author" content="Alex Hixon">
+    <meta charset="utf-8">
+    <title>Sydney Buses Map</title>
+
+    <style>
+      html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+
+      #map_canvas {
+        height: 100%;
+      }
+
+      @media print {
+        html, body {
+          height: auto;
+        }
+
+        #map_canvas {
+          height: 650px;
+        }
+      }
+    </style>
+
+    <script src="http://code.jquery.com/jquery.min.js" type="text/javascript"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&amp;sensor=false"></script>
+    <script>
+      function drawBuses () {
+        $.ajax ({
+          url: "/vehicles",
+        }).done (function (json) {
+          // clear all existing markers (new Maps API is weird)
+          while (document.markers.length > 0) {
+            document.markers.pop ().setMap (null);
+          }
+          
+          // make a marker for each bus location
+          $.each (json.vehicles, function (i, bus) {
+            var loc = new google.maps.LatLng(bus.lat, bus.lon);
+
+            var markerTitle = bus.route + " " + bus.dst;
+            var infowindow = new google.maps.InfoWindow({
+                content: markerTitle
+            });
+
+            var marker = new google.maps.Marker({
+              position: loc,
+              map: document.map,
+              title: markerTitle
+            });
+
+            document.markers.push (marker);
+
+            google.maps.event.addListener (marker, 'click', function() {
+              infowindow.open (document.map, marker);
+            });
+          });
+        }).fail(function() { 
+          alert("failed to get bus location information, stopping updates");
+          window.clearInterval (document.refresher);
+        });
+      }
+
+      function initialize() {
+        var sydney = new google.maps.LatLng(-33.8683, 151.2086);
+        var mapOptions = {
+          zoom: 13,
+          center: sydney,
+          mapTypeId: google.maps.MapTypeId.ROADMAP
+        }
+
+	document.markers = [];
+        document.map = new google.maps.Map(document.getElementById('map_canvas'), mapOptions);
+        drawBuses ();
+
+	// refresh every 30 seconds
+        document.refresher = window.setInterval (drawBuses, 30*1000);
+      }
+    </script>
+  </head>
+
+  <body onload="initialize()">
+    <div id="map_canvas"></div>
+  </body>
+</html>
